@@ -30,7 +30,7 @@ This package allows users to apply the proper aggregation method to raw totals o
 
 user_dataframe = raw_totals.groupby(["date_unit", "group_unit"])[list_of_raw_variables].sum().reset_index()
 
-aggregated_data = calc_raws(user_dataframe)
+aggregated_data = ar.calc_raws(user_dataframe)
 
 
 ### List of standard variable names:
