@@ -12,7 +12,15 @@ pd.options.mode.chained_assignment = None
 
 
 
-def calc_raws(df):
+def group_unit(df, unit='leader'):
+    
+    if unit=='leader':
+        grouped = df.groupby(['firstname', 'lastname', 'Ccode']).sum().reset_index()
+    
+    return grouped
+
+
+def calc_raws(df, unit='leader'):
     
     """
     df - rows are raw totals
@@ -46,9 +54,33 @@ def calc_raws(df):
     df['p4'] = df.apply(p4_func, axis=1)
     df['p5'] = df.apply(p5_func, axis=1)
 
+    if unit == 'leader':
+        
+        keep = ['firstname', 'lastname', 'Ccode', 'vcount', 'distrust', 'task',
+                'bace', 'igb', 'sc', 'cc', 'power', 'i1', 'i2', 'i3', 'i4a', 'i4b',
+                'i5ap', 'i5pr', 'i5re', 'i5op', 'i5th', 'i5pu', 'p1', 'p2', 'p3', 'p4',
+                'p5']
+
+        df = df[keep]
+    
+
     return df
 
 
+
+def convert(df):
+    
+    df.dropna(subset=['vcount', 'HDIS', 'LDIS', 'HTASK', 'LTASK', 'IC',
+       'EC', 'HBIAS', 'LBIAS', 'HSC', 'LSC', 'HCC', 'LCC', 'HPWR', 'LPWR',
+       'self-pun', 'self-threat', 'self oppose', 'self appeal', 'self promise',
+       'self reward', 'other punish', 'other threaten', 'other oppose',
+       'other appeal', 'other promise', 'other reward'], inplace=True)
+    
+    convert =['self-pun','self-threat','self oppose','self appeal','self promise','self reward','other punish',
+              'other threaten','other oppose','other appeal','other promise','other reward']  
+    df[convert] = df[convert].astype(int)
+    
+    return df
 
 
 def i1_func(x):
